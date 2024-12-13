@@ -1,4 +1,5 @@
 import argparse
+from typing import List
 
 
 def read_input(file_name: str):
@@ -88,6 +89,38 @@ def count_sequence(word_search, sequence, debug=False):
     return count
 
 
+def count_xmas(word_search: List[List[str]], debug=False):
+    count = 0
+    if debug:
+        print("Word search:")
+        for row in word_search:
+            print(" ".join(row))
+    for i in range(len(word_search) - 2):
+        for j in range(len(word_search[i]) - 2):
+            if debug:
+                print(f"i={i} j={j}")
+            if word_search[i + 1][j + 1] == "A":
+                word_1 = (
+                    word_search[i][j]
+                    + word_search[i + 1][j + 1]
+                    + word_search[i + 2][j + 2]
+                )
+                word_2 = (
+                    word_search[i][j + 2]
+                    + word_search[i + 1][j + 1]
+                    + word_search[i + 2][j]
+                )
+                if debug:
+                    print(f"word_1={word_1} word_2={word_2}")
+                if (word_1 == "MAS" or word_1 == "SAM") and (
+                    word_2 == "MAS" or word_2 == "SAM"
+                ):
+                    count += 1
+                    if debug:
+                        print(f"Found XMAS at i={i} j={j}. Count={count}.")
+    return count
+
+
 # Parse command-line arguments
 parser = argparse.ArgumentParser(
     prog="Day 04", description="Solution to day 04 of the Advent of Code 2024."
@@ -111,5 +144,6 @@ word_search = read_input(args.input_file)
 print(count_sequence(word_search, "XMAS", args.debug))
 
 # Part 2
+print(count_xmas(word_search, args.debug))
 
 # Done
